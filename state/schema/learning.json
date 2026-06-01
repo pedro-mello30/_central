@@ -2,7 +2,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Learning record",
   "type": "object",
-  "required": ["id", "created", "kind", "status", "text", "origin", "supersedes", "last_transition"],
+  "required": [
+    "id",
+    "created",
+    "kind",
+    "status",
+    "text",
+    "origin",
+    "supersedes",
+    "last_transition"
+  ],
   "additionalProperties": false,
   "properties": {
     "id": { "type": "string", "pattern": "^lrn_" },
@@ -27,7 +36,9 @@
   "allOf": [
     {
       "if": { "properties": { "kind": { "enum": ["learning", "hypothesis"] } } },
-      "then": { "properties": { "status": { "enum": ["candidate", "promoted", "archived", "rejected"] } } }
+      "then": {
+        "properties": { "status": { "enum": ["candidate", "promoted", "archived", "rejected"] } }
+      }
     },
     {
       "if": { "properties": { "kind": { "const": "decision" } } },

@@ -31,10 +31,7 @@ function captureHypotheses(json: unknown): string[] {
 }
 
 /** Run a routine from a directory (already on disk) through an adapter. */
-export async function runLoaded(
-  loaded: LoadedRoutine,
-  opts: RunOptions,
-): Promise<RunResult> {
+export async function runLoaded(loaded: LoadedRoutine, opts: RunOptions): Promise<RunResult> {
   const now = opts.now ?? (() => new Date());
   const startedAt = now().toISOString();
   const inputs = opts.inputs ?? {};

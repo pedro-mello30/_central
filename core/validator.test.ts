@@ -6,7 +6,7 @@ const SCHEMA = join(__dirname, "..", "routines", "example-echo", "schema.json");
 
 describe("validator", () => {
   it("extracts the json block from model output", () => {
-    const raw = "Hi\n\n```json\n{ \"message\": \"Hello\", \"name\": \"P\" }\n```\n";
+    const raw = 'Hi\n\n```json\n{ "message": "Hello", "name": "P" }\n```\n';
     expect(extractJsonBlock(raw)).toEqual({ message: "Hello", name: "P" });
   });
 

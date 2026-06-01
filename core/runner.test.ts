@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { mkdtempSync, rmSync, cpSync, existsSync, readFileSync } from "node:fs";
+import { mkdtempSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadRoutine } from "./contract.js";
 import { runLoaded } from "./runner.js";
 import { MockAdapter } from "../adapters/mock.js";
+import type { AdapterOpts } from "../adapters/base.js";
 import type { LoadedRoutine } from "./types.js";
 
 const SRC = join(__dirname, "..", "routines", "example-echo");
@@ -84,7 +85,7 @@ describe("runner", () => {
     const spy = new MockAdapter("ok");
     const wrapped = {
       name: "spy",
-      run: async (p: string, o: any) => {
+      run: async (p: string, o: AdapterOpts) => {
         called = true;
         return spy.run(p, o);
       },
@@ -123,7 +124,7 @@ describe("runner memory loop", () => {
     const spy = new MockAdapter("ok");
     const wrapped = {
       name: "claude",
-      run: async (p: string, o: any) => {
+      run: async (p: string, o: AdapterOpts) => {
         seenPrompts.push(p);
         return spy.run(p, o);
       },

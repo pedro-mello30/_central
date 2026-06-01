@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import { loadRoutine } from "../../core/contract.js";
 import { runLoaded } from "../../core/runner.js";
 import { MockAdapter } from "../../adapters/mock.js";
@@ -56,7 +55,11 @@ describe("learning-loop routine", () => {
 
   it("produces schema-valid proposals via mock ok", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("ok"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("ok");
     expect(result.failures).toHaveLength(0);
     const json = result.json as { proposals: Proposal[] };
@@ -65,7 +68,11 @@ describe("learning-loop routine", () => {
 
   it("rejects an unsupported op via mock bad, surfacing visible failures", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("bad"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("bad"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("failed");
     expect(result.markdown).toContain("## ⚠️ Failures");
     expect(result.failures.some((f) => f.stage === "validate")).toBe(true);
@@ -73,7 +80,11 @@ describe("learning-loop routine", () => {
 
   it("applying the proposals adds 3 knowledge records and routes the task to Linear", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("ok"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     const { proposals } = result.json as { proposals: Proposal[] };
 
     const dir = tmpStore();

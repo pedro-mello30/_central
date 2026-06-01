@@ -34,7 +34,11 @@ describe("granola-capture routine", () => {
 
   it("captures typed items via mock ok", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("ok"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("ok");
     const json = result.json as { captured: { type: string }[] };
     expect(json.captured.length).toBe(4);
@@ -43,7 +47,11 @@ describe("granola-capture routine", () => {
 
   it("rejects an unsupported capture type via mock bad", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("bad"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("bad"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("failed");
     expect(result.markdown).toContain("## ⚠️ Failures");
     expect(result.failures.some((f) => f.stage === "validate")).toBe(true);

@@ -7,7 +7,7 @@ goal: >
 
 trigger:
   type: schedule
-  cron: "40 8 * * *"        # 08:40 daily — execution lands in spec 0004
+  cron: "40 8 * * *" # 08:40 daily — execution lands in spec 0004
 
 sources:
   - id: state
