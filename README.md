@@ -37,6 +37,10 @@ npx tsx run.ts promote daily-command-center --hyp 0 [--entry 0]
 npx tsx run.ts run learning-loop --model claude
 npx tsx run.ts apply learning-loop --dry-run
 npx tsx run.ts apply learning-loop
+
+# Roll the run log up into per-routine health (optional routine arg filters)
+npx tsx run.ts metrics
+npx tsx run.ts metrics daily-command-center
 ```
 
 `run` is the default command, so `run.ts example-echo ...` also works.
@@ -55,6 +59,15 @@ JSON record to the append-only run log at `runs/runs.jsonl` (git-ignored, tail-a
 
 ```
 run_20260601183836_3ea693 example-echo model=mock status=ok duration=78ms failures=0 hypotheses=0
+```
+
+`metrics` rolls that log up into per-routine operational health — run count, success
+rate, p50/p95 duration, and total failures — read-only over the existing records:
+
+```
+routine               runs  ok%  p50   p95   fails
+daily-command-center  42    95%  1.2s  3.1s  2
+learning-loop         18    100% 0.4s  0.9s  0
 ```
 
 ## Develop

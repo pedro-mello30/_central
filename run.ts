@@ -13,12 +13,13 @@ import { loadRoutine } from "./core/contract.js";
 import { crontabLine } from "./core/schedule.js";
 import { promoteHypothesis } from "./core/memory.js";
 import { applyToStore } from "./core/store.js";
-import { appendRunLog, formatRunLogLine, toRunRecord } from "./core/runlog.js";
+import { appendRunLog, formatRunLogLine, runLogPath, toRunRecord } from "./core/runlog.js";
+import { aggregate, formatMetricsTable, parseRunLog } from "./core/metrics.js";
 import type { Proposal, TransitionCtx } from "./core/state.js";
 import type { Inputs } from "./core/types.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const COMMANDS = new Set(["run", "schedule", "promote", "apply"]);
+const COMMANDS = new Set(["run", "schedule", "promote", "apply", "metrics"]);
 
 interface ParsedArgs {
   command: string;
@@ -153,6 +154,15 @@ function cmdApply(args: ParsedArgs) {
   console.log(res.wrote ? "state/ updated." : "state/ unchanged.");
 }
 
+function cmdMetrics(args: ParsedArgs) {
+  // Read-only rollup of the durable run log. An optional routine arg filters.
+  const path = runLogPath(__dirname);
+  const text = existsSync(path) ? readFileSync(path, "utf8") : "";
+  let records = parseRunLog(text);
+  if (args.routine) records = records.filter((r) => r.routine === args.routine);
+  console.log(formatMetricsTable(aggregate(records)));
+}
+
 function cmdSchedule(args: ParsedArgs) {
   const loaded = loadRoutine(routineDirOf(args.routine!));
   const line = crontabLine(loaded, { model: args.model, repoDir: __dirname });
@@ -175,13 +185,16 @@ function cmdPromote(args: ParsedArgs) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  // `metrics` is a fleet-wide rollup; a routine arg is an optional filter.
+  if (args.command === "metrics") return cmdMetrics(args);
   if (!args.routine) {
     console.error(
       "usage:\n" +
         "  run.ts run <routine> [--model mock|claude|codex] [--variant ok] [--input k=v]\n" +
         "  run.ts schedule <routine> [--model claude]\n" +
         "  run.ts promote <routine> --hyp <i> [--entry <n>]\n" +
-        "  run.ts apply <routine> [--dry-run]",
+        "  run.ts apply <routine> [--dry-run]\n" +
+        "  run.ts metrics [<routine>]",
     );
     process.exit(2);
   }
