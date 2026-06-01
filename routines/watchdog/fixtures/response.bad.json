@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Watchdog — 2026-06-01\n\n## Checks\n(model used an unsupported check status)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"checks\": [\n    { \"name\": \"freshness\", \"status\": \"unknown\", \"detail\": \"x\" }\n  ],\n  \"proposals\": []\n}\n```\n"
+}

@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Watchdog — 2026-06-01\n\n## Checks\n- freshness: fresh — all routines ran within SLA.\n- schema: fresh — every record validates.\n- supersede integrity: fresh — no orphan supersedes.\n- index reconciliation: stale — index counts trail the records by 2.\n\n## Proposals\n- reindex (index has drifted)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"checks\": [\n    { \"name\": \"freshness\", \"status\": \"fresh\", \"detail\": \"All routines ran within SLA\" },\n    { \"name\": \"schema\", \"status\": \"fresh\", \"detail\": \"Every record validates\" },\n    { \"name\": \"supersede-integrity\", \"status\": \"fresh\", \"detail\": \"No orphan supersedes\" },\n    { \"name\": \"index-reconciliation\", \"status\": \"error\", \"detail\": \"index.yaml counts trail records by 2\" }\n  ],\n  \"proposals\": [\n    { \"op\": \"reindex\" }\n  ]\n}\n```\n"
+}
