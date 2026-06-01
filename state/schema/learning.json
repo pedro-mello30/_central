@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Learning record",
+  "type": "object",
+  "required": ["id", "created", "kind", "status", "text", "origin", "supersedes", "last_transition"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^lrn_" },
+    "created": { "type": "string", "minLength": 1 },
+    "kind": { "type": "string", "enum": ["learning", "hypothesis", "decision"] },
+    "status": { "type": "string", "minLength": 1 },
+    "text": { "type": "string", "minLength": 1 },
+    "origin": { "type": "string", "minLength": 1 },
+    "supersedes": { "type": ["string", "null"] },
+    "last_transition": {
+      "type": "object",
+      "required": ["at", "actor", "reason", "op_id"],
+      "additionalProperties": false,
+      "properties": {
+        "at": { "type": "string", "minLength": 1 },
+        "actor": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "op_id": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "enum": ["learning", "hypothesis"] } } },
+      "then": { "properties": { "status": { "enum": ["candidate", "promoted", "archived", "rejected"] } } }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "decision" } } },
+      "then": { "properties": { "status": { "enum": ["active", "archived"] } } }
+    }
+  ]
+}
