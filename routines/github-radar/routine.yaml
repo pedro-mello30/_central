@@ -1,0 +1,49 @@
+name: github-radar
+version: 1
+goal: >
+  Scan GitHub activity across the founder's repos, watchlist, starred projects, and the
+  trending ecosystem, then produce a tight engineering digest: what needs action now, what
+  to keep an eye on, what to ignore, and the themes connecting it all.
+
+trigger:
+  type: schedule
+  cron: "0 8 * * *"         # daily 08:00
+
+sources:
+  - id: my-repos
+    trust: source
+  - id: watchlist
+    trust: context
+  - id: starred
+    trust: context
+  - id: trending
+    trust: hypothesis
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: true
+  mcp: [github]
+
+criteria: |
+  Report only activity actually observed today, at most the top ten items. Classify each
+  item by kind (release, breaking-change, security, deprecation, trending, discussion) and
+  by priority (act-now or watch). Reserve `act-now` for items with a concrete reason to act
+  this week (a breaking change in a dependency you use, a security advisory, a release you
+  must adopt). Never fabricate versions, repos, CVEs, or numbers; anything uncertain or
+  hype-driven (especially from `trending`) goes into `problems` / "what to ignore", never
+  into `act-now`. Keep each field to one short sentence.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["infra/prod/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human
