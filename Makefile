@@ -8,7 +8,7 @@ M ?= mock
 
 .DEFAULT_GOAL := help
 
-.PHONY: help setup check typecheck lint format test coverage audit run schedule apply promote clean
+.PHONY: help setup check typecheck lint format test coverage audit run schedule apply promote metrics clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -51,6 +51,9 @@ apply: ## Apply a routine's last-run proposals (DRY=1 to preview)
 
 promote: ## Promote a memory hypothesis: make promote R=<routine> HYP=<n>
 	npx tsx run.ts promote $(R) --hyp $(or $(HYP),0)
+
+metrics: ## Roll the run log up into per-routine health (fleet-wide)
+	npx tsx run.ts metrics
 
 clean: ## Remove run artifacts and coverage output
 	rm -rf coverage runs **/.last-run.json
