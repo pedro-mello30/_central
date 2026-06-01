@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# PR Code QA — acme/api#482\n\n(model scored only three dimensions)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"pr\": \"acme/api#482\",\n  \"verdict\": \"approve\",\n  \"scorecard\": [\n    {\n      \"dimension\": \"intent\",\n      \"rating\": \"pass\",\n      \"note\": \"ok\"\n    },\n    {\n      \"dimension\": \"correctness\",\n      \"rating\": \"pass\",\n      \"note\": \"ok\"\n    },\n    {\n      \"dimension\": \"tests\",\n      \"rating\": \"pass\",\n      \"note\": \"ok\"\n    }\n  ],\n  \"briefing_match\": {\n    \"issue\": {\n      \"aligned\": true,\n      \"note\": \"ok\"\n    },\n    \"acceptance\": {\n      \"aligned\": true,\n      \"note\": \"ok\"\n    },\n    \"conventions\": {\n      \"aligned\": true,\n      \"note\": \"ok\"\n    },\n    \"scope\": {\n      \"aligned\": true,\n      \"note\": \"ok\"\n    }\n  },\n  \"critiques\": [],\n  \"problems\": []\n}\n```\n"
+}
