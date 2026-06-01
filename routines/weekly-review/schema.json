@@ -1,30 +1,34 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["week_of", "wins", "metrics", "misses", "focus_next_week", "risks"],
+  "required": ["week_of", "proposals"],
   "additionalProperties": false,
   "properties": {
     "week_of": { "type": "string", "minLength": 1 },
-    "wins": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "metrics": {
+    "proposals": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "value", "delta"],
+        "required": ["op", "id", "reason"],
         "additionalProperties": false,
         "properties": {
-          "name": { "type": "string", "minLength": 1 },
-          "value": { "type": "string", "minLength": 1 },
-          "delta": { "type": "string", "minLength": 1 }
-        }
+          "op": { "type": "string", "enum": ["transition", "correct"] },
+          "id": { "type": "string", "minLength": 1 },
+          "to": { "type": "string" },
+          "text": { "type": "string" },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "op": { "const": "transition" } } },
+            "then": { "required": ["to"] }
+          },
+          {
+            "if": { "properties": { "op": { "const": "correct" } } },
+            "then": { "required": ["text"] }
+          }
+        ]
       }
-    },
-    "misses": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-    "focus_next_week": {
-      "type": "array",
-      "maxItems": 3,
-      "items": { "type": "string", "minLength": 1 }
-    },
-    "risks": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+    }
   }
 }
