@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# LinkedIn Radar — 2026-06-01\n\n(model produced only two post angles)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"signals\": [],\n  \"post_angles\": [\n    { \"angle\": \"A\", \"hook\": \"x\" },\n    { \"angle\": \"B\", \"hook\": \"y\" }\n  ],\n  \"themes\": [],\n  \"problems\": []\n}\n```\n"
+}

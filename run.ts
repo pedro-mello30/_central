@@ -1,0 +1,139 @@
+#!/usr/bin/env -S npx tsx
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+import type { Adapter } from "./adapters/base.js";
+import { MockAdapter } from "./adapters/mock.js";
+import { ClaudeAdapter } from "./adapters/claude.js";
+import { CodexAdapter } from "./adapters/codex.js";
+import { run } from "./core/runner.js";
+import { loadRoutine } from "./core/contract.js";
+import { crontabLine } from "./core/schedule.js";
+import { promoteHypothesis } from "./core/memory.js";
+import type { Inputs } from "./core/types.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const COMMANDS = new Set(["run", "schedule", "promote"]);
+
+interface ParsedArgs {
+  command: string;
+  routine?: string;
+  model: string;
+  variant: string;
+  inputs: Inputs;
+  entry: number;
+  hyp?: number;
+}
+
+function parseArgs(argv: string[]): ParsedArgs {
+  const args: ParsedArgs = {
+    command: "run",
+    model: "mock",
+    variant: "ok",
+    inputs: {},
+    entry: 0,
+  };
+  // First token may be a command; otherwise it's the routine (default `run`).
+  let rest = argv;
+  if (rest.length && rest[0] && COMMANDS.has(rest[0])) {
+    args.command = rest[0];
+    rest = rest.slice(1);
+  }
+  for (let i = 0; i < rest.length; i++) {
+    const a = rest[i];
+    if (a === undefined) continue;
+    if (a === "--model") args.model = rest[++i] ?? args.model;
+    else if (a === "--variant") args.variant = rest[++i] ?? args.variant;
+    else if (a === "--entry") args.entry = Number(rest[++i] ?? 0);
+    else if (a === "--hyp") args.hyp = Number(rest[++i] ?? 0);
+    else if (a === "--input") {
+      const kv = rest[++i] ?? "";
+      const eq = kv.indexOf("=");
+      if (eq > 0) args.inputs[kv.slice(0, eq)] = kv.slice(eq + 1);
+    } else if (!a.startsWith("--") && !args.routine) {
+      args.routine = a;
+    }
+  }
+  return args;
+}
+
+function selectAdapter(model: string, variant: string): Adapter {
+  switch (model) {
+    case "mock":
+      return new MockAdapter(variant);
+    case "claude":
+      return new ClaudeAdapter();
+    case "codex":
+      return new CodexAdapter();
+    default:
+      throw new Error(`unknown model "${model}". Available: mock, claude, codex.`);
+  }
+}
+
+function routineDirOf(name: string): string {
+  const dir = join(__dirname, "routines", name);
+  if (!existsSync(dir)) {
+    console.error(`routine not found: ${dir}`);
+    process.exit(2);
+  }
+  return dir;
+}
+
+async function cmdRun(args: ParsedArgs) {
+  const defaults: Inputs = {
+    date: new Date().toISOString().slice(0, 10),
+    timezone: process.env.TZ ?? "UTC",
+  };
+  const inputs = { ...defaults, ...args.inputs };
+  const adapter = selectAdapter(args.model, args.variant);
+  const result = await run(routineDirOf(args.routine!), { adapter, inputs });
+  console.log(result.markdown);
+  process.exit(result.status === "ok" ? 0 : 1);
+}
+
+function cmdSchedule(args: ParsedArgs) {
+  const loaded = loadRoutine(routineDirOf(args.routine!));
+  const line = crontabLine(loaded, { model: args.model, repoDir: __dirname });
+  console.log(`# install with: (crontab -l 2>/dev/null; echo '<line>') | crontab -`);
+  console.log(line);
+}
+
+function cmdPromote(args: ParsedArgs) {
+  if (args.hyp === undefined) {
+    console.error("usage: promote <routine> --hyp <index> [--entry <n from newest>]");
+    process.exit(2);
+  }
+  const loaded = loadRoutine(routineDirOf(args.routine!));
+  const { promoted } = promoteHypothesis(loaded, {
+    entryIndex: args.entry,
+    hypothesisIndex: args.hyp,
+  });
+  console.log(`promoted: ${promoted}`);
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (!args.routine) {
+    console.error(
+      "usage:\n" +
+        "  run.ts run <routine> [--model mock|claude|codex] [--variant ok] [--input k=v]\n" +
+        "  run.ts schedule <routine> [--model claude]\n" +
+        "  run.ts promote <routine> --hyp <i> [--entry <n>]",
+    );
+    process.exit(2);
+  }
+  switch (args.command) {
+    case "schedule":
+      return cmdSchedule(args);
+    case "promote":
+      return cmdPromote(args);
+    default:
+      return cmdRun(args);
+  }
+}
+
+main().catch((e) => {
+  console.error(e instanceof Error ? e.message : String(e));
+  process.exit(1);
+});

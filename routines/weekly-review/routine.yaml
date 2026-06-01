@@ -1,0 +1,45 @@
+name: weekly-review
+version: 1
+goal: >
+  Produce a strategic weekly performance review that compares this week to last, with
+  Wins, Metrics, Misses, a focused plan for next week, and open Risks.
+
+trigger:
+  type: schedule
+  cron: "30 7 * * 1"        # Mondays 07:30
+
+sources:
+  - id: metrics
+    trust: source
+  - id: crm
+    trust: source
+  - id: calendar
+    trust: context
+  - id: tasks
+    trust: context
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: [metrics, crm]
+
+criteria: |
+  Compare this week to last and cite the numbers. Wins and Misses must be grounded in
+  the metrics/crm sources. Choose at most 3 focus items for next week — the few that
+  move the business most. Anything you cannot substantiate goes into `risks` (or
+  `problems`), never into wins. Keep each item to one short sentence.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["infra/prod/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

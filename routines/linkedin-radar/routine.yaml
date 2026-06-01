@@ -1,0 +1,43 @@
+name: linkedin-radar
+version: 1
+goal: >
+  Capture today's relevant signals and turn them into exactly three LinkedIn post angles
+  the founder can use this week, plus the themes connecting them.
+
+trigger:
+  type: schedule
+  cron: "0 18 * * *"        # daily 18:00
+
+sources:
+  - id: linkedin
+    trust: source
+  - id: repos
+    trust: context
+  - id: news
+    trust: hypothesis
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: [linkedin]
+
+criteria: |
+  Capture only signals actually observed today. Produce exactly three post angles, each
+  with a concrete hook. Never fabricate engagement numbers or quotes; anything uncertain
+  (especially from the `news` source) goes into `problems`, not into a confident angle.
+  Keep each field to one short sentence.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["infra/prod/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

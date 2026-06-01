@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Daily Command Center — 2026-06-01\n\n## Top 3\n(model overflowed the limit with four items)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"top3\": [\n    { \"title\": \"A\", \"why\": \"x\", \"source\": \"crm\" },\n    { \"title\": \"B\", \"why\": \"x\", \"source\": \"gmail\" },\n    { \"title\": \"C\", \"why\": \"x\", \"source\": \"tasks\" },\n    { \"title\": \"D\", \"why\": \"x\", \"source\": \"calendar\" }\n  ],\n  \"calendar\": [],\n  \"follow_ups\": [],\n  \"blocked\": [],\n  \"problems\": []\n}\n```\n"
+}

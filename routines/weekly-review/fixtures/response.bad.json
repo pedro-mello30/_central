@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Weekly Performance Review — week of 2026-05-25\n\n(model overflowed the focus limit with four items)\n\n```json\n{\n  \"week_of\": \"2026-05-25\",\n  \"wins\": [],\n  \"metrics\": [],\n  \"misses\": [],\n  \"focus_next_week\": [\"A\", \"B\", \"C\", \"D\"],\n  \"risks\": []\n}\n```\n"
+}

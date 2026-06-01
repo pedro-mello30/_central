@@ -1,0 +1,31 @@
+name: example-echo
+version: 1
+goal: Echo a greeting back as a structured brief, to prove the engine end-to-end.
+
+trigger:
+  type: manual
+
+sources:
+  - id: greeting-input
+    trust: source
+
+inputs: [date, name]
+
+tools:
+  shell: false
+  web: false
+
+criteria: |
+  Greet the named person. Keep the message to a single sentence.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

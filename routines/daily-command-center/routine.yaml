@@ -1,0 +1,48 @@
+name: daily-command-center
+version: 1
+goal: >
+  Produce a one-screen founder brief that consolidates the day's signals into a fixed
+  format: Top 3 priorities, today's Calendar, open Follow-ups, Blocked items, and Problems.
+
+trigger:
+  type: schedule
+  cron: "40 8 * * *"        # 08:40 daily — execution lands in spec 0004
+
+sources:
+  - id: gmail
+    trust: source
+  - id: calendar
+    trust: source
+  - id: crm
+    trust: source
+  - id: repos
+    trust: context
+  - id: tasks
+    trust: context
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: [gmail, gcal, crm]
+
+criteria: |
+  Rank Top 3 by deadline proximity first, then revenue impact. Maximum 3 items — never
+  more. Include only things the founder can act on TODAY. A follow-up is "open" if it has
+  had no reply for 2+ days. Anything you are unsure about, or any source you could not
+  read, goes into `problems` as a candidate — never invent it into Top 3. Keep every
+  field to one short sentence.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["infra/prod/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

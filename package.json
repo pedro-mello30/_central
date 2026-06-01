@@ -1,0 +1,26 @@
+{
+  "name": "central",
+  "version": "0.1.0",
+  "description": "Model-agnostic routine engine",
+  "type": "module",
+  "bin": {
+    "central": "./run.ts"
+  },
+  "scripts": {
+    "central": "tsx run.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "yaml": "^2.5.1",
+    "zod": "^3.23.8",
+    "ajv": "^8.17.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1",
+    "@types/node": "^20.16.5"
+  }
+}

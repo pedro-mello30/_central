@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["date", "top3", "calendar", "follow_ups", "blocked", "problems"],
+  "additionalProperties": false,
+  "properties": {
+    "date": { "type": "string", "minLength": 1 },
+    "top3": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["title", "why", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "why": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "calendar": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["time", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "time": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "follow_ups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["who", "item", "age_days"],
+        "additionalProperties": false,
+        "properties": {
+          "who": { "type": "string", "minLength": 1 },
+          "item": { "type": "string", "minLength": 1 },
+          "age_days": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "blocked": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "blocker"],
+        "additionalProperties": false,
+        "properties": {
+          "item": { "type": "string", "minLength": 1 },
+          "blocker": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}
