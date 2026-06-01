@@ -8,6 +8,7 @@ import { preflight } from "./preflight.js";
 import { extractJsonBlock, validateOutput } from "./validator.js";
 import type { Failure, Inputs, LoadedRoutine, RunResult } from "./types.js";
 
+/** Options for a single routine execution; all fields except `adapter` are optional overrides. */
 export interface RunOptions {
   adapter: Adapter;
   inputs?: Inputs;

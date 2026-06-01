@@ -40,6 +40,7 @@ const learningSchema = z
   })
   .optional();
 
+/** Zod schema for a routine.yaml — used by both the engine and tests to validate fixture files. */
 export const routineSchema = z.object({
   name: z
     .string()
@@ -57,6 +58,7 @@ export const routineSchema = z.object({
   learning: learningSchema,
 });
 
+/** Thrown when routine.yaml fails Zod validation; carries the full issue list for structured logging. */
 export class RoutineValidationError extends Error {
   constructor(public readonly issues: z.ZodIssue[]) {
     super(
