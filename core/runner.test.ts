@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadRoutine } from "./contract.js";
-import { runLoaded } from "./runner.js";
+import { run, runLoaded } from "./runner.js";
 import { MockAdapter } from "../adapters/mock.js";
 import type { AdapterOpts } from "../adapters/base.js";
 import type { LoadedRoutine } from "./types.js";
@@ -129,6 +129,22 @@ describe("runner", () => {
     expect(called).toBe(false);
     expect(result.status).toBe("failed");
     expect(result.failures.some((f) => f.stage === "preflight")).toBe(true);
+  });
+});
+
+describe("run() convenience", () => {
+  it("loads and runs a routine from a directory path", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "central-routine-"));
+    tmpDirs.push(dir);
+    cpSync(SRC, dir, { recursive: true });
+    const result = await run(dir, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "2026-06-01", name: "Pedro" },
+      now: FIXED,
+      skipMemory: true,
+    });
+    expect(result.status).toBe("ok");
+    expect(result.json).toEqual({ message: "Hello, Pedro!", name: "Pedro" });
   });
 });
 
