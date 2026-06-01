@@ -1,0 +1,47 @@
+name: task-review
+version: 1
+goal: >
+  Review open work without turning into a backlog dump. Cut the noise into a short
+  attention queue, surface the Top 5 tasks where a decision today changes the outcome,
+  and stop at a drafted comment. Reads the learning-loop state as trusted operational
+  memory. Drafts only — it never changes a task's status.
+
+trigger:
+  type: schedule
+  cron: "50 8 * * *"        # 08:50 daily — right after the daily-command-center brief
+
+sources:
+  - id: tasks
+    trust: source
+  - id: state
+    trust: source
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: [tasks]
+
+criteria: |
+  Step 1 — sweep: read open, overdue, unowned, and at-risk tasks and keep only the ones
+  that are a real blocker; drop the noise. Step 2 — prioritize: rank by where a decision
+  TODAY changes the outcome (deadline proximity and dependencies break ties). `top5` holds
+  at most five items — never more. Step 3 — safe action: every `draft` is comment text
+  only; never change a status, owner, or due date. Promoted `state` records are trusted
+  truth; candidate/hypothesis records are NOT truth — surface them in `problems`, never as
+  a `top5` item. Any task you are unsure about, or any source you could not read, goes into
+  `problems` — never invent it. Keep every field to one short sentence.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["state/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

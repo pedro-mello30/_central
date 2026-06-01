@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Task Review — 2026-06-01\n\n## Queue\n(model used an unsupported queue status)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"queue\": [\n    { \"task\": \"Ship pricing page copy\", \"status\": \"blocked\", \"signal\": \"x\" }\n  ],\n  \"top5\": [],\n  \"drafts\": [],\n  \"problems\": []\n}\n```\n"
+}
