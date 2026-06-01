@@ -35,7 +35,12 @@ afterEach(() => {
 
 const ADD: Proposal = {
   op: "add",
-  record: { kind: "decision", status: "active", text: "Adopt usage-based pricing", origin: "granola:m1" },
+  record: {
+    kind: "decision",
+    status: "active",
+    text: "Adopt usage-based pricing",
+    origin: "granola:m1",
+  },
 };
 
 describe("core/store — applyToStore", () => {
@@ -55,7 +60,9 @@ describe("core/store — applyToStore", () => {
     const res = applyToStore({
       stateDir: dir,
       proposals: [ADD],
-      routines: [{ name: "learning-loop", last_run: "2026-06-01T08:35:00Z", sla_hours: 26, status: "fresh" }],
+      routines: [
+        { name: "learning-loop", last_run: "2026-06-01T08:35:00Z", sla_hours: 26, status: "fresh" },
+      ],
       mkCtx,
     });
 
@@ -68,7 +75,10 @@ describe("core/store — applyToStore", () => {
 
   it("refuses an invalid proposal and writes nothing", () => {
     const dir = tmpStore();
-    const bad: Proposal = { op: "add", record: { kind: "decision", status: "candidate", text: "x", origin: "o" } };
+    const bad: Proposal = {
+      op: "add",
+      record: { kind: "decision", status: "candidate", text: "x", origin: "o" },
+    };
     expect(() => applyToStore({ stateDir: dir, proposals: [bad], mkCtx })).toThrow();
     expect(readFileSync(join(dir, "learnings.jsonl"), "utf8")).toBe("");
   });

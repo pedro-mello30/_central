@@ -49,9 +49,7 @@ export function applyToStore(opts: ApplyToStoreOpts): ApplyToStoreResult {
   for (const r of records) {
     const v = validateOutput(r, schemaPath);
     if (!v.valid) {
-      throw new Error(
-        `invalid record ${r.id}: ${v.failures.map((f) => f.message).join("; ")}`,
-      );
+      throw new Error(`invalid record ${r.id}: ${v.failures.map((f) => f.message).join("; ")}`);
     }
   }
 

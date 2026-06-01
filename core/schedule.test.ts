@@ -16,8 +16,6 @@ describe("schedule", () => {
   });
 
   it("throws for a non-schedule routine", () => {
-    expect(() => crontabLine(echo, { model: "mock", repoDir: "/repo" })).toThrow(
-      /not "schedule"/,
-    );
+    expect(() => crontabLine(echo, { model: "mock", repoDir: "/repo" })).toThrow(/not "schedule"/);
   });
 });

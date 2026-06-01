@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { mkdtempSync, rmSync, cpSync, existsSync, readFileSync } from "node:fs";
+import { mkdtempSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadRoutine } from "./contract.js";
 import { runLoaded } from "./runner.js";
 import { MockAdapter } from "../adapters/mock.js";
+import type { AdapterOpts } from "../adapters/base.js";
 import type { LoadedRoutine } from "./types.js";
 
 const SRC = join(__dirname, "..", "routines", "example-echo");
@@ -41,6 +42,36 @@ describe("runner", () => {
     const mem = readFileSync(join(loaded.dir, "memory.md"), "utf8");
     expect(mem).toContain("status: ok");
     expect(mem).toContain("example-echo (mock)");
+  });
+
+  it("stamps a run id, timing, and captured hypotheses on the result", async () => {
+    const loaded = tmpRoutine();
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "2026-06-01", name: "Pedro" },
+      now: FIXED,
+      mkRunId: () => "run_fixed_abc123",
+    });
+
+    expect(result.runId).toBe("run_fixed_abc123");
+    expect(result.startedAt).toBe("2026-06-01T08:40:00.000Z");
+    expect(result.finishedAt).toBe("2026-06-01T08:40:00.000Z");
+    expect(result.durationMs).toBe(0);
+    expect(result.hypotheses).toEqual([]);
+  });
+
+  it("generates a unique run id when none is injected", async () => {
+    const loaded = tmpRoutine();
+    const a = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "x", name: "P" },
+    });
+    const b = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "x", name: "P" },
+    });
+    expect(a.runId).toMatch(/^run_/);
+    expect(a.runId).not.toBe(b.runId);
   });
 
   it("fails visibly when output violates the schema", async () => {
@@ -84,7 +115,7 @@ describe("runner", () => {
     const spy = new MockAdapter("ok");
     const wrapped = {
       name: "spy",
-      run: async (p: string, o: any) => {
+      run: async (p: string, o: AdapterOpts) => {
         called = true;
         return spy.run(p, o);
       },
@@ -123,7 +154,7 @@ describe("runner memory loop", () => {
     const spy = new MockAdapter("ok");
     const wrapped = {
       name: "claude",
-      run: async (p: string, o: any) => {
+      run: async (p: string, o: AdapterOpts) => {
         seenPrompts.push(p);
         return spy.run(p, o);
       },

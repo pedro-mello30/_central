@@ -67,6 +67,8 @@ export interface Failure {
 
 /** What every adapter returns. */
 export interface RunResult {
+  /** Stable, unique identity for this run — the key for observability/correlation. */
+  runId: string;
   routine: string;
   model: string;
   status: "ok" | "failed";
@@ -75,7 +77,14 @@ export interface RunResult {
   /** Parsed + validated JSON output, when a schema was provided and it passed. */
   json?: unknown;
   failures: Failure[];
+  /** Low-confidence items captured from the output (hypothesis != truth). */
+  hypotheses: string[];
   /** The raw adapter output (model text), when the adapter ran. */
   raw?: string;
+  /** ISO timestamp when the run started. */
   startedAt: string;
+  /** ISO timestamp when the run finished. */
+  finishedAt: string;
+  /** Wall-clock duration of the run, in milliseconds. */
+  durationMs: number;
 }

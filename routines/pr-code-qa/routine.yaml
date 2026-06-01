@@ -8,15 +8,15 @@ goal: >
   critiques. Reviews only: it posts nothing, approves nothing on GitHub, and changes no file.
 
 trigger:
-  type: github          # fires on a pull request
+  type: github # fires on a pull request
 
 sources:
   - id: pr
-    trust: source       # the diff + PR body under review
+    trust: source # the diff + PR body under review
   - id: issue
-    trust: context       # linked issue / spec / acceptance criteria — the "briefing"
+    trust: context # linked issue / spec / acceptance criteria — the "briefing"
   - id: conventions
-    trust: context       # repo standards and reference code — the "approved examples"
+    trust: context # repo standards and reference code — the "approved examples"
 
 inputs: [date, timezone, pr]
 

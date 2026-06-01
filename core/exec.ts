@@ -12,11 +12,7 @@ export interface CommandResult {
  * Runs a command, writing `input` to its stdin, and resolves with the captured
  * output + exit code. Never rejects on a non-zero exit — that is data, not an error.
  */
-export type CommandRunner = (
-  cmd: string,
-  args: string[],
-  input: string,
-) => Promise<CommandResult>;
+export type CommandRunner = (cmd: string, args: string[], input: string) => Promise<CommandResult>;
 
 export const defaultRunner: CommandRunner = (cmd, args, input) =>
   new Promise((resolve, reject) => {
@@ -26,9 +22,7 @@ export const defaultRunner: CommandRunner = (cmd, args, input) =>
     child.stdout.on("data", (d) => (stdout += d.toString()));
     child.stderr.on("data", (d) => (stderr += d.toString()));
     child.on("error", reject); // e.g. ENOENT if the binary vanished after preflight
-    child.on("close", (code) =>
-      resolve({ stdout, stderr, exitStatus: code ?? 0 }),
-    );
+    child.on("close", (code) => resolve({ stdout, stderr, exitStatus: code ?? 0 }));
     child.stdin.end(input);
   });
 

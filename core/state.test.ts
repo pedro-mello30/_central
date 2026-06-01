@@ -24,7 +24,12 @@ const CTX: TransitionCtx = {
 function seed(): LearningRecord[] {
   return addRecord(
     [],
-    { kind: "hypothesis", status: "candidate", text: "Pricing is too low for enterprise", origin: "granola:m1" },
+    {
+      kind: "hypothesis",
+      status: "candidate",
+      text: "Pricing is too low for enterprise",
+      origin: "granola:m1",
+    },
     CTX,
   );
 }
@@ -96,7 +101,12 @@ describe("core/state — records", () => {
 
 describe("core/state — task routing", () => {
   it("routeTask produces a Linear payload and does not return a learnings record", () => {
-    const payload = routeTask({ op: "task", title: "Send Acme the MSA", origin: "granola:m1", target: "linear" });
+    const payload = routeTask({
+      op: "task",
+      title: "Send Acme the MSA",
+      origin: "granola:m1",
+      target: "linear",
+    });
     expect(payload.target).toBe("linear");
     expect(payload.title).toBe("Send Acme the MSA");
     expect(payload.origin).toBe("granola:m1");
@@ -116,7 +126,11 @@ describe("core/state — projections", () => {
 
   it("reindex recomputes counts by status, deterministically", () => {
     let recs = addRecord([], { kind: "learning", status: "promoted", text: "a", origin: "o" }, CTX);
-    recs = addRecord(recs, { kind: "hypothesis", status: "candidate", text: "b", origin: "o" }, { ...CTX, id: "lrn_x" });
+    recs = addRecord(
+      recs,
+      { kind: "hypothesis", status: "candidate", text: "b", origin: "o" },
+      { ...CTX, id: "lrn_x" },
+    );
     const yaml = reindex(recs, [
       { name: "learning-loop", last_run: "2026-06-01T08:35:00Z", sla_hours: 26, status: "fresh" },
     ]);
@@ -125,14 +139,24 @@ describe("core/state — projections", () => {
     expect(yaml).toContain("candidate: 1");
     expect(yaml).toContain("learning-loop");
     // deterministic: same input → identical output
-    expect(reindex(recs, [
-      { name: "learning-loop", last_run: "2026-06-01T08:35:00Z", sla_hours: 26, status: "fresh" },
-    ])).toBe(yaml);
+    expect(
+      reindex(recs, [
+        { name: "learning-loop", last_run: "2026-06-01T08:35:00Z", sla_hours: 26, status: "fresh" },
+      ]),
+    ).toBe(yaml);
   });
 
   it("projectDecisions renders only decision records, deterministically", () => {
-    let recs = addRecord([], { kind: "decision", status: "active", text: "Adopt usage-based pricing", origin: "o" }, CTX);
-    recs = addRecord(recs, { kind: "hypothesis", status: "candidate", text: "noise", origin: "o" }, { ...CTX, id: "lrn_y" });
+    let recs = addRecord(
+      [],
+      { kind: "decision", status: "active", text: "Adopt usage-based pricing", origin: "o" },
+      CTX,
+    );
+    recs = addRecord(
+      recs,
+      { kind: "hypothesis", status: "candidate", text: "noise", origin: "o" },
+      { ...CTX, id: "lrn_y" },
+    );
     const md = projectDecisions(recs);
     expect(md).toContain("Adopt usage-based pricing");
     expect(md).not.toContain("noise");

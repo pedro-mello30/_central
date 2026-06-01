@@ -40,9 +40,7 @@ export function composePrompt(
   }
 
   if (routine.sources.length > 0) {
-    const lines = routine.sources
-      .map((s) => `- ${s.id} (trust: ${s.trust})`)
-      .join("\n");
+    const lines = routine.sources.map((s) => `- ${s.id} (trust: ${s.trust})`).join("\n");
     sections.push(`## Sources\n${lines}`);
   }
 
@@ -69,9 +67,7 @@ export function composePrompt(
       ? `- forbidden_paths: ${routine.guards.forbidden_paths.join(", ")}`
       : undefined,
   ].filter(Boolean) as string[];
-  sections.push(
-    `## Guardrails (read much, write little)\n${guardLines.join("\n")}`,
-  );
+  sections.push(`## Guardrails (read much, write little)\n${guardLines.join("\n")}`);
 
   return sections.join("\n\n") + "\n";
 }

@@ -47,7 +47,11 @@ describe("pr-code-qa routine", () => {
 
   it("produces a full scorecard, verdict, and rule-tagged critiques via mock ok", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("ok"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("ok");
     const json = result.json as {
       verdict: string;
@@ -62,9 +66,12 @@ describe("pr-code-qa routine", () => {
     if (json.critiques.some((c) => c.severity === "blocker")) {
       expect(json.verdict).toBe("block");
     }
-    expect(Object.keys(json.briefing_match).sort()).toEqual(
-      ["acceptance", "conventions", "issue", "scope"],
-    );
+    expect(Object.keys(json.briefing_match).sort()).toEqual([
+      "acceptance",
+      "conventions",
+      "issue",
+      "scope",
+    ]);
     for (const heading of ["Scorecard", "Briefing match", "Verdict", "Critiques"]) {
       expect(result.markdown).toContain(heading);
     }
@@ -72,7 +79,11 @@ describe("pr-code-qa routine", () => {
 
   it("rejects an incomplete scorecard via mock bad", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("bad"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("bad"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("failed");
     expect(result.markdown).toContain("## ⚠️ Failures");
     expect(result.failures.some((f) => f.stage === "validate")).toBe(true);

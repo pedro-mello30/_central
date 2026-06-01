@@ -21,7 +21,14 @@
           },
           "kind": {
             "type": "string",
-            "enum": ["release", "breaking-change", "security", "deprecation", "trending", "discussion"]
+            "enum": [
+              "release",
+              "breaking-change",
+              "security",
+              "deprecation",
+              "trending",
+              "discussion"
+            ]
           },
           "priority": {
             "type": "string",

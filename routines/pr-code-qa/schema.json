@@ -6,7 +6,16 @@
   "definitions": {
     "dimension": {
       "type": "string",
-      "enum": ["intent", "scope", "correctness", "tests", "readability", "security", "performance", "api-contract"]
+      "enum": [
+        "intent",
+        "scope",
+        "correctness",
+        "tests",
+        "readability",
+        "security",
+        "performance",
+        "api-contract"
+      ]
     },
     "match": {
       "type": "object",

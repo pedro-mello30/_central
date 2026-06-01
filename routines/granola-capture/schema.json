@@ -12,7 +12,10 @@
         "required": ["type", "text", "origin"],
         "additionalProperties": false,
         "properties": {
-          "type": { "type": "string", "enum": ["objection", "discovery", "follow_up", "decision_mentioned"] },
+          "type": {
+            "type": "string",
+            "enum": ["objection", "discovery", "follow_up", "decision_mentioned"]
+          },
           "text": { "type": "string", "minLength": 1 },
           "origin": { "type": "string", "minLength": 1 }
         }

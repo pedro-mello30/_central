@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { randomBytes } from "node:crypto";
 import type { Adapter } from "../adapters/base.js";
 import { composePrompt } from "./compose.js";
 import { loadRoutine } from "./contract.js";
@@ -16,6 +17,14 @@ export interface RunOptions {
   skipMemory?: boolean;
   /** How many recent memory records to feed back as prompt context. Default 5. */
   memoryContext?: number;
+  /** Override run-id generation for deterministic tests. */
+  mkRunId?: () => string;
+}
+
+/** Default run-id: sortable timestamp prefix + short random suffix. */
+function defaultRunId(startedAt: string): string {
+  const stamp = startedAt.replace(/[-:.TZ]/g, "").slice(0, 14);
+  return `run_${stamp}_${randomBytes(3).toString("hex")}`;
 }
 
 /** Capture low-confidence items from output for the memory log (hypothesis != truth). */
@@ -31,12 +40,10 @@ function captureHypotheses(json: unknown): string[] {
 }
 
 /** Run a routine from a directory (already on disk) through an adapter. */
-export async function runLoaded(
-  loaded: LoadedRoutine,
-  opts: RunOptions,
-): Promise<RunResult> {
+export async function runLoaded(loaded: LoadedRoutine, opts: RunOptions): Promise<RunResult> {
   const now = opts.now ?? (() => new Date());
   const startedAt = now().toISOString();
+  const runId = opts.mkRunId?.() ?? defaultRunId(startedAt);
   const inputs = opts.inputs ?? {};
   const failures: Failure[] = [];
 
@@ -86,16 +93,23 @@ export async function runLoaded(
 
   const status: RunResult["status"] = failures.length === 0 ? "ok" : "failed";
   const markdown = renderMarkdown(loaded, { status, raw, failures });
+  const hypotheses = captureHypotheses(json);
+  const finishedAt = now().toISOString();
+  const durationMs = Date.parse(finishedAt) - Date.parse(startedAt);
 
   const result: RunResult = {
+    runId,
     routine: loaded.routine.name,
     model: opts.adapter.name,
     status,
     markdown,
     json,
     failures,
+    hypotheses,
     raw,
     startedAt,
+    finishedAt,
+    durationMs,
   };
 
   if (!opts.skipMemory) {
@@ -103,7 +117,7 @@ export async function runLoaded(
       timestamp: startedAt,
       model: opts.adapter.name,
       status,
-      hypotheses: captureHypotheses(json),
+      hypotheses,
       notes: failures.length ? `${failures.length} failure(s)` : undefined,
     });
   }
