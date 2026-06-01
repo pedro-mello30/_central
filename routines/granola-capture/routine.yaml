@@ -7,7 +7,7 @@ goal: >
 
 trigger:
   type: schedule
-  cron: "30 8 * * *"        # 08:30 daily — feeds learning-loop (08:35)
+  cron: "30 8 * * *" # 08:30 daily — feeds learning-loop (08:35)
 
 sources:
   - id: granola

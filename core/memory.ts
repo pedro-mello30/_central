@@ -137,15 +137,13 @@ export function promoteHypothesis(
   const hyp = safeJsonArray(block.match(/^- hypotheses: (.*)$/m)?.[1]);
   const prom = safeJsonArray(block.match(/^- promoted: (.*)$/m)?.[1]);
   if (opts.hypothesisIndex < 0 || opts.hypothesisIndex >= hyp.length) {
-    throw new Error(
-      `hypothesis index ${opts.hypothesisIndex} out of range (have ${hyp.length})`,
-    );
+    throw new Error(`hypothesis index ${opts.hypothesisIndex} out of range (have ${hyp.length})`);
   }
 
   const [moved] = hyp.splice(opts.hypothesisIndex, 1);
   prom.push(moved!);
 
-  let updated = block
+  const updated = block
     .replace(/^- hypotheses: .*$/m, `- hypotheses: ${JSON.stringify(hyp)}`)
     .replace(/^- promoted: .*$/m, `- promoted: ${JSON.stringify(prom)}`);
 

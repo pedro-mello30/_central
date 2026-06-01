@@ -47,7 +47,7 @@ export function preflight(
     } else {
       try {
         JSON.parse(readFileSync(schemaPath, "utf8"));
-      } catch (e) {
+      } catch {
         fail(`output schema "${routine.outputs.schema}" is not valid JSON`);
       }
     }

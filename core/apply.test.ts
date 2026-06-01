@@ -14,7 +14,15 @@ function mkCtx(seq: number): TransitionCtx {
 describe("core/state — applyProposals", () => {
   it("applies add proposals into records and routes task proposals to Linear, never to JSONL", () => {
     const proposals: Proposal[] = [
-      { op: "add", record: { kind: "learning", status: "candidate", text: "ICP skews technical", origin: "granola:m1" } },
+      {
+        op: "add",
+        record: {
+          kind: "learning",
+          status: "candidate",
+          text: "ICP skews technical",
+          origin: "granola:m1",
+        },
+      },
       { op: "task", title: "Email Acme the MSA", origin: "granola:m1", target: "linear" },
     ];
     const res = applyProposals([], proposals, mkCtx);
@@ -30,7 +38,17 @@ describe("core/state — applyProposals", () => {
   it("applies transition and correct proposals in order", () => {
     const seeded = applyProposals(
       [],
-      [{ op: "add", record: { kind: "hypothesis", status: "candidate", text: "Churn is onboarding", origin: "o" } }],
+      [
+        {
+          op: "add",
+          record: {
+            kind: "hypothesis",
+            status: "candidate",
+            text: "Churn is onboarding",
+            origin: "o",
+          },
+        },
+      ],
       mkCtx,
     ).records;
 
@@ -44,7 +62,11 @@ describe("core/state — applyProposals", () => {
 
   it("refuses an invalid proposal (bad status for kind) by throwing", () => {
     expect(() =>
-      applyProposals([], [{ op: "add", record: { kind: "decision", status: "candidate", text: "x", origin: "o" } }], mkCtx),
+      applyProposals(
+        [],
+        [{ op: "add", record: { kind: "decision", status: "candidate", text: "x", origin: "o" } }],
+        mkCtx,
+      ),
     ).toThrow(/decision/);
   });
 });

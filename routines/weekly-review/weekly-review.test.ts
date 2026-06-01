@@ -47,7 +47,11 @@ describe("weekly-review routine (curator)", () => {
 
   it("produces lifecycle proposals via mock ok", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("ok"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("ok");
     const json = result.json as { proposals: { op: string }[] };
     expect(json.proposals.length).toBe(4);
@@ -60,7 +64,11 @@ describe("weekly-review routine (curator)", () => {
 
   it("rejects an unsupported op via mock bad", async () => {
     const loaded = tmpRoutine();
-    const result = await runLoaded(loaded, { adapter: new MockAdapter("bad"), inputs: INPUTS, now: FIXED });
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("bad"),
+      inputs: INPUTS,
+      now: FIXED,
+    });
     expect(result.status).toBe("failed");
     expect(result.markdown).toContain("## ⚠️ Failures");
     expect(result.failures.some((f) => f.stage === "validate")).toBe(true);
@@ -79,7 +87,12 @@ describe("weekly-review routine (curator)", () => {
       text: "SSO before pricing",
       origin: "granola:x",
       supersedes: null,
-      last_transition: { at: "2026-05-25T00:00:00Z", actor: "learning-loop", reason: "seed", op_id: "op_seed" },
+      last_transition: {
+        at: "2026-05-25T00:00:00Z",
+        actor: "learning-loop",
+        reason: "seed",
+        op_id: "op_seed",
+      },
     };
     writeFileSync(join(dir, "learnings.jsonl"), JSON.stringify(seeded) + "\n");
 

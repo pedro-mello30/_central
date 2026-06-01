@@ -14,11 +14,7 @@ export class MockAdapter implements Adapter {
   constructor(private readonly variant: string = "ok") {}
 
   async run(_composedPrompt: string, opts: AdapterOpts): Promise<AdapterRunResult> {
-    const fixturePath = join(
-      opts.loaded.dir,
-      "fixtures",
-      `response.${this.variant}.json`,
-    );
+    const fixturePath = join(opts.loaded.dir, "fixtures", `response.${this.variant}.json`);
     if (!existsSync(fixturePath)) {
       return {
         raw: `MOCK: no fixture for variant "${this.variant}"`,

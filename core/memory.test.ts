@@ -3,12 +3,7 @@ import { mkdtempSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { loadRoutine } from "./contract.js";
-import {
-  appendMemory,
-  parseMemory,
-  promoteHypothesis,
-  readRecentMemory,
-} from "./memory.js";
+import { appendMemory, parseMemory, promoteHypothesis, readRecentMemory } from "./memory.js";
 import type { LoadedRoutine } from "./types.js";
 
 const SRC = join(__dirname, "..", "routines", "example-echo");

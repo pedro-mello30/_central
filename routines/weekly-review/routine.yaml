@@ -7,7 +7,7 @@ goal: >
 
 trigger:
   type: schedule
-  cron: "30 7 * * 1"        # Mondays 07:30
+  cron: "30 7 * * 1" # Mondays 07:30
 
 sources:
   - id: state
