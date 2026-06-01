@@ -49,6 +49,14 @@ enforced structurally — the engine never auto-writes or publishes. Failures ar
 a visible `## ⚠️ Failures` section, never hidden. Hypotheses stay candidates until a human
 `promote`s them (hypothesis ≠ truth).
 
+Every run is observable: it carries a unique `runId` and timing, prints a structured
+one-line summary to stderr (stdout stays the clean markdown pipe), and appends a compact
+JSON record to the append-only run log at `runs/runs.jsonl` (git-ignored, tail-able):
+
+```
+run_20260601183836_3ea693 example-echo model=mock status=ok duration=78ms failures=0 hypotheses=0
+```
+
 ## Develop
 
 ```bash
@@ -76,7 +84,6 @@ npm test
 | `daily-command-center` | `40 8 * * *` | Top 3 / Calendar / Follow-ups / Blocked / Problems (reads `state/`) |
 | `watchdog` | `0 9 * * *` | freshness/integrity checks + reindex proposals |
 | `weekly-review` | `30 7 * * 1` | lifecycle proposals: promote / demote / archive / correct |
-| `linkedin-radar` | `0 18 * * *` | Signals / Post angles (×3) / Themes |
 
 The Learning Loop is a closed system around `state/` (the git-tracked source of truth:
 `learnings.jsonl`, `decisions.md`, `index.yaml`). Routines stay read-only and **propose**;

@@ -11,7 +11,7 @@ const SRC = __dirname;
 const tmpDirs: string[] = [];
 
 function tmpRoutine(): LoadedRoutine {
-  const dir = mkdtempSync(join(tmpdir(), "central-lr-"));
+  const dir = mkdtempSync(join(tmpdir(), "central-gh-"));
   tmpDirs.push(dir);
   cpSync(SRC, dir, { recursive: true });
   return loadRoutine(dir);
@@ -22,17 +22,17 @@ afterEach(() => {
 });
 
 const INPUTS = { date: "2026-06-01", timezone: "UTC" };
-const FIXED = () => new Date("2026-06-01T18:00:00Z");
+const FIXED = () => new Date("2026-06-01T08:00:00Z");
 
-describe("linkedin-radar routine", () => {
+describe("github-radar routine", () => {
   it("loads and validates against the engine contract", () => {
     const { routine } = loadRoutine(SRC);
-    expect(routine.name).toBe("linkedin-radar");
-    expect(routine.trigger.cron).toBe("0 18 * * *");
-    expect(routine.sources.find((s) => s.id === "news")?.trust).toBe("hypothesis");
+    expect(routine.name).toBe("github-radar");
+    expect(routine.trigger.cron).toBe("0 8 * * *");
+    expect(routine.sources.find((s) => s.id === "trending")?.trust).toBe("hypothesis");
   });
 
-  it("produces a valid radar with exactly 3 post angles", async () => {
+  it("produces a valid classified digest", async () => {
     const loaded = tmpRoutine();
     const result = await runLoaded(loaded, {
       adapter: new MockAdapter("ok"),
@@ -40,14 +40,20 @@ describe("linkedin-radar routine", () => {
       now: FIXED,
     });
     expect(result.status).toBe("ok");
-    const json = result.json as Record<string, unknown[]>;
-    expect((json.post_angles as unknown[]).length).toBe(3);
-    for (const heading of ["Signals", "Post angles", "Themes"]) {
+    const json = result.json as Record<string, unknown>;
+    const items = json.items as { kind: string; priority: string }[];
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.length).toBeLessThanOrEqual(10);
+    for (const i of items) {
+      expect(i.kind.length).toBeGreaterThan(0);
+      expect(["act-now", "watch"]).toContain(i.priority);
+    }
+    for (const heading of ["Act now", "Watch", "What to ignore", "Themes"]) {
       expect(result.markdown).toContain(heading);
     }
   });
 
-  it("rejects fewer than 3 post angles with visible failures", async () => {
+  it("rejects an out-of-enum priority with visible failures", async () => {
     const loaded = tmpRoutine();
     const result = await runLoaded(loaded, {
       adapter: new MockAdapter("bad"),

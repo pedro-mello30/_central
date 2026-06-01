@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# GitHub Radar — 2026-06-01\n\n(model emitted an item with an out-of-enum priority)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"items\": [\n    { \"item\": \"Some repo did a thing\", \"repo\": \"x/y\", \"source\": \"trending\", \"kind\": \"release\", \"priority\": \"someday\" }\n  ],\n  \"themes\": [],\n  \"problems\": []\n}\n```\n"
+}

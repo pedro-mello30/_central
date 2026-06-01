@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["date", "items", "themes"],
+  "additionalProperties": false,
+  "properties": {
+    "date": { "type": "string", "minLength": 1 },
+    "items": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["item", "repo", "source", "kind", "priority"],
+        "additionalProperties": false,
+        "properties": {
+          "item": { "type": "string", "minLength": 1 },
+          "repo": { "type": "string", "minLength": 1 },
+          "source": {
+            "type": "string",
+            "enum": ["my-repos", "watchlist", "starred", "trending"]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "release",
+              "breaking-change",
+              "security",
+              "deprecation",
+              "trending",
+              "discussion"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["act-now", "watch"]
+          }
+        }
+      }
+    },
+    "themes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "problems": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}

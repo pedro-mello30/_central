@@ -44,6 +44,36 @@ describe("runner", () => {
     expect(mem).toContain("example-echo (mock)");
   });
 
+  it("stamps a run id, timing, and captured hypotheses on the result", async () => {
+    const loaded = tmpRoutine();
+    const result = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "2026-06-01", name: "Pedro" },
+      now: FIXED,
+      mkRunId: () => "run_fixed_abc123",
+    });
+
+    expect(result.runId).toBe("run_fixed_abc123");
+    expect(result.startedAt).toBe("2026-06-01T08:40:00.000Z");
+    expect(result.finishedAt).toBe("2026-06-01T08:40:00.000Z");
+    expect(result.durationMs).toBe(0);
+    expect(result.hypotheses).toEqual([]);
+  });
+
+  it("generates a unique run id when none is injected", async () => {
+    const loaded = tmpRoutine();
+    const a = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "x", name: "P" },
+    });
+    const b = await runLoaded(loaded, {
+      adapter: new MockAdapter("ok"),
+      inputs: { date: "x", name: "P" },
+    });
+    expect(a.runId).toMatch(/^run_/);
+    expect(a.runId).not.toBe(b.runId);
+  });
+
   it("fails visibly when output violates the schema", async () => {
     const loaded = tmpRoutine();
     const result = await runLoaded(loaded, {

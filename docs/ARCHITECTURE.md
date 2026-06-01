@@ -389,7 +389,6 @@ npx tsx run.ts apply learning-loop
 | `daily-command-center` | `40 8 * * *` | Top 3 / Calendar / Follow-ups / Blocked / Problems (reads `state/`) |
 | `watchdog` | `0 9 * * *` | Freshness / integrity checks + reindex proposals |
 | `weekly-review` | `30 7 * * 1` | Lifecycle proposals: promote / demote / archive / correct |
-| `linkedin-radar` | `0 18 * * *` | Signals / Post angles (×3) / Themes |
 
 The daily ordering is intentional: **capture (08:30) → classify (08:35) → brief (08:40)**,
 so the Command Center reads state the Learning Loop has just refreshed.

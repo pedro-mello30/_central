@@ -13,6 +13,7 @@ import { loadRoutine } from "./core/contract.js";
 import { crontabLine } from "./core/schedule.js";
 import { promoteHypothesis } from "./core/memory.js";
 import { applyToStore } from "./core/store.js";
+import { appendRunLog, formatRunLogLine, toRunRecord } from "./core/runlog.js";
 import type { Proposal, TransitionCtx } from "./core/state.js";
 import type { Inputs } from "./core/types.js";
 
@@ -101,6 +102,11 @@ async function cmdRun(args: ParsedArgs) {
   if (result.json !== undefined) {
     writeFileSync(join(dir, ".last-run.json"), JSON.stringify(result.json, null, 2));
   }
+  // Observability: append a compact record to the durable run log and emit a
+  // structured one-line summary to stderr (stdout stays the clean markdown pipe).
+  const record = toRunRecord(result);
+  appendRunLog(__dirname, record);
+  console.error(formatRunLogLine(record));
   process.exit(result.status === "ok" ? 0 : 1);
 }
 
