@@ -1,0 +1,43 @@
+name: granola-capture
+version: 1
+goal: >
+  Faithfully capture the day's meeting signals from Granola — objections, discoveries,
+  follow-ups, and decisions mentioned — as raw items with provenance. Capture only; no
+  classification, no judgement. This is the intake for the learning loop.
+
+trigger:
+  type: schedule
+  cron: "30 8 * * *"        # 08:30 daily — feeds learning-loop (08:35)
+
+sources:
+  - id: granola
+    trust: source
+  - id: gmail
+    trust: context
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: [gmail, gdrive]
+
+criteria: |
+  Capture each meeting signal verbatim-in-spirit as one short item tagged with its type
+  (objection | discovery | follow_up | decision_mentioned) and its `origin` (which meeting).
+  Do NOT classify into learning/hypothesis/decision — that is the learning-loop's job. Do
+  not infer or embellish; if a meeting could not be read, that is a problem for the loop,
+  not an invented item.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["state/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

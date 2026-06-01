@@ -4,8 +4,9 @@ and the same every day.
 
 ## What to do
 
-1. Read the configured sources (gmail, calendar, crm, repos, tasks). Read only — never
-   reply, send, modify, or close anything.
+1. Read the configured sources (state, gmail, calendar, crm, repos, tasks). Read only —
+   never reply, send, modify, or close anything. `state` is the learning-loop store
+   (`state/learnings.jsonl`): it is the trusted operational memory behind today's brief.
 2. Build the brief in this exact section order:
    - **Top 3** — the three things that most deserve the founder's attention today, ranked
      by deadline proximity then revenue impact. Never more than three.
@@ -17,6 +18,8 @@ and the same every day.
 
 ## Rules
 
+- Promoted state records are trusted truth — use them to inform Top 3. Candidate/hypothesis
+  records are NOT truth: surface them in `problems`, never as a Top 3 item.
 - Hypothesis ≠ truth: anything uncertain is a `problem` candidate, not a Top 3 item.
 - Read much, write little: you have no permission to change anything.
 - Keep every field to one short sentence.

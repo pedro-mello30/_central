@@ -1,0 +1,48 @@
+name: learning-loop
+version: 1
+goal: >
+  Classify the day's captured signals into durable knowledge. Each signal becomes a
+  proposed record (learning / hypothesis / decision) or a routed task — proposals only,
+  never written directly. Uncertain signals enter as hypotheses, never as truth.
+
+trigger:
+  type: schedule
+  cron: "35 8 * * *"        # 08:35 daily — just before the Daily Command Center (08:40)
+
+sources:
+  - id: granola-capture
+    trust: context
+  - id: gmail
+    trust: context
+  - id: calendar
+    trust: context
+  - id: state
+    trust: source
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: [gmail, gcal]
+
+criteria: |
+  Classify each captured signal as exactly one of: learning, hypothesis, decision, or a
+  task. A learning or hypothesis ALWAYS enters with status `candidate` — never promote it
+  here; promotion is the Weekly Review's job (hypothesis != truth). A decision enters with
+  status `active`. An action item is NOT knowledge: emit it as a `task` proposal routed to
+  Linear, never as a learnings record. Reconcile against `state` (the source of truth); do
+  not re-propose something already recorded. Every proposal carries its `origin`.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["state/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

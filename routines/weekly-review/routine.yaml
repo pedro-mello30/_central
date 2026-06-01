@@ -1,35 +1,32 @@
 name: weekly-review
-version: 1
+version: 2
 goal: >
-  Produce a strategic weekly performance review that compares this week to last, with
-  Wins, Metrics, Misses, a focused plan for next week, and open Risks.
+  Curate the learning-loop state every Monday: promote candidates that have earned trust,
+  demote ones that haven't held up, archive what's stale, and correct what's wrong. Emits
+  lifecycle proposals only — nothing is written until a human runs `apply`.
 
 trigger:
   type: schedule
   cron: "30 7 * * 1"        # Mondays 07:30
 
 sources:
-  - id: metrics
+  - id: state
     trust: source
-  - id: crm
-    trust: source
-  - id: calendar
-    trust: context
-  - id: tasks
-    trust: context
 
 inputs: [date, timezone]
 
 tools:
   shell: false
   web: false
-  mcp: [metrics, crm]
+  mcp: []
 
 criteria: |
-  Compare this week to last and cite the numbers. Wins and Misses must be grounded in
-  the metrics/crm sources. Choose at most 3 focus items for next week — the few that
-  move the business most. Anything you cannot substantiate goes into `risks` (or
-  `problems`), never into wins. Keep each item to one short sentence.
+  Review every candidate and active record in `state`. Promote a candidate to `promoted`
+  only when there is repeated, grounded evidence (cite it in `reason`); demote a `promoted`
+  record back to `candidate` if it no longer holds; archive what is stale or settled; reject
+  what proved false; correct a record whose text is wrong (a correction writes a new record
+  that supersedes the old). Every proposal needs a one-sentence `reason`. Propose only —
+  never write. Promotion is a deliberate human-reviewed act: hypothesis != truth.
 
 outputs:
   format: markdown+json
@@ -37,7 +34,7 @@ outputs:
 
 guards:
   write_allowed: false
-  forbidden_paths: ["infra/prod/**"]
+  forbidden_paths: ["state/**"]
   max_files_changed: 0
 
 learning:

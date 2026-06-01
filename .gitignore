@@ -2,3 +2,5 @@ node_modules/
 dist/
 *.log
 runs/
+.last-run.json
+routines/**/.last-run.json

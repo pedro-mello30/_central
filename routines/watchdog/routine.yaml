@@ -1,0 +1,44 @@
+name: watchdog
+version: 1
+goal: >
+  Check that the loop's routines are fresh and that the state store is recording correctly.
+  Report each check as fresh / stale / error, and propose a reindex when the index has
+  drifted. Diagnoses only — it never repairs state directly.
+
+trigger:
+  type: schedule
+  cron: "0 9 * * *"        # 09:00 daily — after the morning routines have run
+
+sources:
+  - id: state
+    trust: source
+  - id: routines
+    trust: context
+
+inputs: [date, timezone]
+
+tools:
+  shell: false
+  web: false
+  mcp: []
+
+criteria: |
+  For each routine, compare its last run against its SLA (stale if older). Validate that
+  `state/learnings.jsonl` parses and matches the record schema, that no record's
+  `supersedes` points at a missing id, and that `index.yaml` counts reconcile with the
+  records. A failing check is `error`, an overdue routine is `stale`, otherwise `fresh`.
+  Propose `{op:"reindex"}` only when the index no longer matches the records — never invent
+  a repair beyond reindex.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["state/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human

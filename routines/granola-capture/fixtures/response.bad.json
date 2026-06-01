@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Granola Capture — 2026-06-01\n\n## Captured\n(model used an unsupported capture type)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"captured\": [\n    { \"type\": \"random-thought\", \"text\": \"x\", \"origin\": \"granola:m1\" }\n  ]\n}\n```\n"
+}
