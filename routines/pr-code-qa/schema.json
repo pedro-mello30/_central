@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["date", "pr", "verdict", "scorecard", "briefing_match", "critiques", "problems"],
+  "additionalProperties": false,
+  "definitions": {
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "intent",
+        "scope",
+        "correctness",
+        "tests",
+        "readability",
+        "security",
+        "performance",
+        "api-contract"
+      ]
+    },
+    "match": {
+      "type": "object",
+      "required": ["aligned", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "aligned": { "type": "boolean" },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "properties": {
+    "date": { "type": "string", "minLength": 1 },
+    "pr": { "type": "string", "minLength": 1 },
+    "verdict": { "type": "string", "enum": ["approve", "revise", "block"] },
+    "scorecard": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["dimension", "rating", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "dimension": { "$ref": "#/definitions/dimension" },
+          "rating": { "type": "string", "enum": ["pass", "warn", "fail"] },
+          "note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "briefing_match": {
+      "type": "object",
+      "required": ["issue", "acceptance", "conventions", "scope"],
+      "additionalProperties": false,
+      "properties": {
+        "issue": { "$ref": "#/definitions/match" },
+        "acceptance": { "$ref": "#/definitions/match" },
+        "conventions": { "$ref": "#/definitions/match" },
+        "scope": { "$ref": "#/definitions/match" }
+      }
+    },
+    "critiques": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["location", "quote", "problem", "suggestion", "severity", "dimension"],
+        "additionalProperties": false,
+        "properties": {
+          "location": { "type": "string", "minLength": 1 },
+          "quote": { "type": "string", "minLength": 1 },
+          "problem": { "type": "string", "minLength": 1 },
+          "suggestion": { "type": "string", "minLength": 1 },
+          "severity": { "type": "string", "enum": ["blocker", "required", "suggestion"] },
+          "dimension": { "$ref": "#/definitions/dimension" }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

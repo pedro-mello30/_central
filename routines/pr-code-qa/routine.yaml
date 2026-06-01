@@ -1,0 +1,54 @@
+name: pr-code-qa
+version: 1
+goal: >
+  Turn "valida esse PR?" into a repeatable QA pass over a GitHub pull request's CODE.
+  Score the diff against a fixed scorecard (intent, scope, correctness, tests, readability,
+  security, performance, api-contract), check it against the linked issue/spec and the
+  repo's conventions, and return one verdict — approve, revise, or block — with line-level
+  critiques. Reviews only: it posts nothing, approves nothing on GitHub, and changes no file.
+
+trigger:
+  type: github # fires on a pull request
+
+sources:
+  - id: pr
+    trust: source # the diff + PR body under review
+  - id: issue
+    trust: context # linked issue / spec / acceptance criteria — the "briefing"
+  - id: conventions
+    trust: context # repo standards and reference code — the "approved examples"
+
+inputs: [date, timezone, pr]
+
+tools:
+  shell: false
+  web: false
+  mcp: [github]
+
+criteria: |
+  Step 1 — scorecard: rate the diff on all eight dimensions, every time, no skips:
+  intent, scope, correctness, tests, readability, security, performance, api-contract.
+  Each gets pass | warn | fail plus a one-line note. Step 2 — evidence: the change must
+  match the linked issue/spec on `issue`, `acceptance`, `conventions`, and `scope`; record
+  each with a one-line note, never assume alignment you cannot see in the diff. Step 3 —
+  verdict + critiques: for every critique give the EXACT location (path:line) and offending
+  code, why it is a problem, and a better fix. Severity follows fixed rules — a behavioral
+  change with no test or evidence backing it is a `blocker`; a security, data-loss, or
+  breaking-API/compliance risk is `required` (obrigatório); a subjective or stylistic call
+  is a `suggestion`. Verdict is derived, not vibes: `block` if any blocker exists, else
+  `revise` if any required item or scorecard `fail` exists, else `approve`. Anything you
+  could not read (diff, linked issue, conventions) goes into `problems` — never invent a
+  test, a spec, or alignment to fill a gap.
+
+outputs:
+  format: markdown+json
+  schema: schema.json
+
+guards:
+  write_allowed: false
+  forbidden_paths: ["infra/prod/**"]
+  max_files_changed: 0
+
+learning:
+  memory: memory.md
+  promote: human
