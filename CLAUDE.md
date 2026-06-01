@@ -36,6 +36,7 @@ make run R=daily-command-center M=mock      # M = mock | claude | codex
 make schedule R=daily-command-center M=claude
 make apply R=learning-loop DRY=1            # preview; drop DRY=1 to persist
 make promote R=daily-command-center HYP=0
+make metrics                                # per-routine health from the run log
 ```
 
 ## Conventions & guardrails
