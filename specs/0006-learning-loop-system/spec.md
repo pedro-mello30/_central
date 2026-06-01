@@ -1,6 +1,6 @@
 # Spec 0006 — Learning Loop System
 
-Status: draft (2026-06-01)
+Status: accepted (implemented + verified 2026-06-01)
 Increment: 0006
 Depends on: 0001, 0002, 0003, 0004, 0005
 
