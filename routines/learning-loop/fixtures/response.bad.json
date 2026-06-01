@@ -1,0 +1,4 @@
+{
+  "exitStatus": 0,
+  "raw": "# Learning Loop — 2026-06-01\n\n## Proposals\n(model emitted an unsupported op — it tried to promote directly)\n\n```json\n{\n  \"date\": \"2026-06-01\",\n  \"proposals\": [\n    { \"op\": \"promote\", \"id\": \"lrn_123\", \"to\": \"promoted\" }\n  ]\n}\n```\n"
+}
