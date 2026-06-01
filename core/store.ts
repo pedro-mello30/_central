@@ -18,6 +18,7 @@ import {
 } from "./state.js";
 import { validateOutput } from "./validator.js";
 
+/** Parameters for applying a batch of proposals to the on-disk learning store. */
 export interface ApplyToStoreOpts {
   stateDir: string;
   proposals: Proposal[];
@@ -26,6 +27,7 @@ export interface ApplyToStoreOpts {
   mkCtx: (seq: number) => TransitionCtx;
 }
 
+/** Result of an `applyToStore` call; `wrote: false` when `--dry-run` was set. */
 export interface ApplyToStoreResult {
   applied: string[];
   tasks: LinearPayload[];
