@@ -12,7 +12,7 @@
         "required": ["task", "signal"],
         "additionalProperties": false,
         "properties": {
-          "task":   { "type": "string", "minLength": 1 },
+          "task": { "type": "string", "minLength": 1 },
           "signal": { "type": "string", "minLength": 1 }
         }
       }
@@ -24,7 +24,7 @@
         "required": ["task", "signal"],
         "additionalProperties": false,
         "properties": {
-          "task":   { "type": "string", "minLength": 1 },
+          "task": { "type": "string", "minLength": 1 },
           "signal": { "type": "string", "minLength": 1 }
         }
       }
@@ -36,7 +36,7 @@
         "required": ["task", "signal"],
         "additionalProperties": false,
         "properties": {
-          "task":   { "type": "string", "minLength": 1 },
+          "task": { "type": "string", "minLength": 1 },
           "signal": { "type": "string", "minLength": 1 }
         }
       }
@@ -49,10 +49,10 @@
         "required": ["task", "bucket", "reason", "nudge"],
         "additionalProperties": false,
         "properties": {
-          "task":   { "type": "string", "minLength": 1 },
+          "task": { "type": "string", "minLength": 1 },
           "bucket": { "type": "string", "enum": ["overdue", "at_risk", "unowned"] },
           "reason": { "type": "string", "minLength": 1 },
-          "nudge":  { "type": "string", "minLength": 1 }
+          "nudge": { "type": "string", "minLength": 1 }
         }
       }
     },
