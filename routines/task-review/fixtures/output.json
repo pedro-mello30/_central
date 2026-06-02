@@ -1,0 +1,45 @@
+{
+  "date": "2026-06-02",
+  "overdue": [
+    {
+      "task": "Ship pricing page copy",
+      "signal": "Due 2026-05-30, no commits or comments in 3 days"
+    }
+  ],
+  "at_risk": [
+    {
+      "task": "Vendor security questionnaire",
+      "signal": "Due 2026-06-04, owner out until Wednesday with no delegated backup"
+    }
+  ],
+  "unowned": [
+    {
+      "task": "Onboarding checklist v2",
+      "signal": "No assignee since PM rotation on 2026-05-28"
+    }
+  ],
+  "top5": [
+    {
+      "task": "Ship pricing page copy",
+      "bucket": "overdue",
+      "reason": "Blocking the launch email send",
+      "nudge": "This is blocking the launch email — can we lock the hero section today and ship the rest as fast-follow?"
+    },
+    {
+      "task": "Vendor security questionnaire",
+      "bucket": "at_risk",
+      "reason": "Deal cannot close without it and owner is unavailable",
+      "nudge": "Owner is out until Wednesday and the deadline is Thursday — who can cover this or accept the slip?"
+    },
+    {
+      "task": "Onboarding checklist v2",
+      "bucket": "unowned",
+      "reason": "Drifting with no owner for 5 days",
+      "nudge": "No owner since the rotation — assign someone today or explicitly defer to next cycle."
+    }
+  ],
+  "problems": [
+    "Could not read tasks source for the design squad (permission denied) — items may be missing from triage",
+    "State record 'vendor-deal-close-date' is a hypothesis, not promoted — not used for at_risk classification"
+  ]
+}

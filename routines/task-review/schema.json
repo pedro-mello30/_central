@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["date", "overdue", "at_risk", "unowned", "top5", "problems"],
+  "additionalProperties": false,
+  "properties": {
+    "date": { "type": "string", "minLength": 1 },
+    "overdue": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task", "signal"],
+        "additionalProperties": false,
+        "properties": {
+          "task": { "type": "string", "minLength": 1 },
+          "signal": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "at_risk": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task", "signal"],
+        "additionalProperties": false,
+        "properties": {
+          "task": { "type": "string", "minLength": 1 },
+          "signal": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "unowned": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task", "signal"],
+        "additionalProperties": false,
+        "properties": {
+          "task": { "type": "string", "minLength": 1 },
+          "signal": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "top5": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["task", "bucket", "reason", "nudge"],
+        "additionalProperties": false,
+        "properties": {
+          "task": { "type": "string", "minLength": 1 },
+          "bucket": { "type": "string", "enum": ["overdue", "at_risk", "unowned"] },
+          "reason": { "type": "string", "minLength": 1 },
+          "nudge": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "problems": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}
