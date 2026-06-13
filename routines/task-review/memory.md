@@ -41,3 +41,8 @@ Operational notes the routine should carry forward across runs.
 - hypotheses: ["External task source (e.g. Linear) is not accessible in this runtime — live backlog cannot be read; triage is materially incomplete. This is the eighth consecutive run (prior: 2026-06-11, 2026-06-09, 2026-06-08, 2026-06-07, 2026-06-05, 2026-06-04, 2026-06-02) with identical blockers; human action is required to wire the live backlog into this routine.","All in-repo task data (specs/0001–0006, 6 files, 45 items) is marked done [x]; no open tasks carry due-date, assignee, or last-activity metadata required for overdue/at_risk/unowned classification.","State store is empty — learnings.jsonl has no records, index.yaml has no counts, decisions.md has no decisions; no promoted operational context is available."]
 - promoted: []
 
+## 2026-06-13T10:33:37.063Z — task-review (claude)
+- status: ok
+- hypotheses: ["External task source not wired in (ninth consecutive run since 2026-06-02). Live backlog cannot be read; triage is structurally incomplete. Human action required to wire the task source into this routine.","State store is empty — learnings.jsonl has no records, index.yaml has no counts, decisions.md has no decisions; no promoted operational context available.","All in-repo spec tasks (specs/0001–0006, 45 items) are marked done [x]; no open tasks carry due-date, assignee, or last-activity metadata required for overdue/at_risk/unowned classification."]
+- promoted: []
+
